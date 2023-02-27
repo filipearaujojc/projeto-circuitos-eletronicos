@@ -1,0 +1,38 @@
+//Definição das portas utilizadas
+#define SENSOR_TEMPERATURA A0 //Porta analógica utilizada pelo sensor de temperatura
+#define MOTOR_VENTILADOR 4 //Porta digital utilizada para acionar o motor do ventilador
+#define LED_VERMELHO 7 //Porta digital utilizada para acionar o LED vermelho
+#define BUZINA 8 //Porta digital utilizada para acionar a buzina
+
+void setup() {
+  //Configuração das portas utilizadas
+  pinMode(MOTOR_VENTILADOR, OUTPUT);
+  pinMode(LED_VERMELHO, OUTPUT);
+  pinMode(BUZINA, OUTPUT);
+  Serial.begin(9600); //Inicia a comunicação serial com a placa
+}
+
+void loop() {
+  //Leitura da temperatura
+  float temperatura = analogRead(SENSOR_TEMPERATURA);
+  temperatura = temperatura * 0.48828125; //Conversão da leitura do sensor para graus Celsius
+  Serial.println(temperatura); //Exibe a leitura da temperatura no monitor serial
+  
+  //Verifica se a temperatura é maior ou igual a 30 graus Celsius
+  if (temperatura >= 30) {
+    digitalWrite(MOTOR_VENTILADOR, HIGH); //Aciona o motor do ventilador
+  } else {
+    digitalWrite(MOTOR_VENTILADOR, LOW); //Desliga o motor do ventilador
+  }
+  
+  //Verifica se a temperatura é maior ou igual a 50 graus Celsius
+  if (temperatura >= 50) {
+    digitalWrite(LED_VERMELHO, HIGH); //Aciona o LED vermelho
+    tone(BUZINA, 2000); //Aciona a buzina
+  } else {
+    digitalWrite(LED_VERMELHO, LOW); //Desliga o LED vermelho
+    noTone(BUZINA); //Desliga a buzina
+  }
+  
+  delay(1000); //Espera 1 segundo antes de realizar a próxima leitura da temperatura
+}
